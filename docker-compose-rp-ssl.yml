@@ -1,0 +1,47 @@
+# This docker-compose can be added to your existing project or run independently. Your choice!
+# This assumes that all data will be stored in an "appdata" sub-directory where your docker-compose.yml file is located.
+# This will create two containers:
+#
+# 1. nginx: the widely popular nginx-proxy container (https://github.com/jwilder/nginx-proxy)
+# 2. letsencrypt: a dynamic let's encrypt container
+
+version: '2'
+services:
+  nginx:
+    container_name: nginx
+    hostname: nginx
+    image: jwilder/nginx-proxy
+    restart: unless-stopped
+    networks:
+      - nginx-proxy
+    ports:
+      - 80:80/tcp
+      - 443:443/tcp
+    environment:
+      - TZ=America/Toronto
+    labels:
+      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy=true"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      #- ./appdata/nginx/my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
+      - ./appdata/nginx/vhost.d:/etc/nginx/vhost.d
+      - ./appdata/letsencrypt:/etc/nginx/certs:ro
+      - /usr/share/nginx/html
+
+  letsencrypt:
+    container_name: letsencrypt
+    hostname: letsencrypt
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    restart: unless-stopped
+    #environment:
+     # - DEBUG=true
+    volumes_from:
+      - nginx
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./appdata/letsencrypt:/etc/nginx/certs:rw
+      
+networks:
+  nginx-proxy:
+     external:
+       name: proxy-tier
