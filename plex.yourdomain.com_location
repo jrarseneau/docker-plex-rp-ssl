@@ -1,0 +1,25 @@
+# RENAME THIS FILE TO YOUR FQDN_location
+# This file goes into the aforementioned nginx appdata folder:
+# In our examples, it would be
+# ./appdata/nginx/vhost.d
+#
+# This file is the nginx location file for your plex server
+# It has to be setup this way due to nginx-proxy
+#
+		if ($request_method != OPTIONS) {
+			set $test A;
+		}
+		if ($http_x_plex_device_name = '') {
+			set $test "${test}B";
+		}
+		if ($arg_X-Plex-Device-Name = '') {
+			set $test "${test}C";
+		}
+		if ($http_user_agent !~ (SmartTV)) {
+			set $test "${test}D";
+		}
+
+		#If the client isn't an app like a SmartTV and such, forward them to the web interface.
+		if ($test = ABCD) {
+			rewrite ^/$ $scheme://$http_host/web/index.html;
+		}
