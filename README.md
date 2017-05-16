@@ -1,7 +1,7 @@
 # docker-plex-rp-ssl
 Plex in Docker, with nginx-proxy, let's encrypt for use with Cloud Flare
 
-# 1. Create Docker network
+## 1. Create Docker network
 You need to create a docker network that your containers will communicate on for the reverse proxy.
 
 In these examples, we will use the `proxy-tier` network.
