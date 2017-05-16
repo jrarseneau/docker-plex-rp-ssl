@@ -1,0 +1,37 @@
+# This docker-compose file will setup plex. You can copy and paste the relevant components into your existing project.
+# I specifically split Plex and the above nginx/let's encrypt since I run many services that are not tied to Plex and
+# still want to use the RP/SSL for those services. 
+
+# Careful notes:
+# 1. Note the environment variables, modify these to suit
+# 2. Note the volumes, modify these to suit
+version: '2'
+services:
+  plex:
+    container_name: plex
+    hostname: plex
+    image: plexinc/pms-docker:plexpass
+    restart: unless-stopped
+    ports:
+      - 32401:32400/tcp
+    environment:
+      - TZ=America/Toronto
+      - PLEX_UID=1000
+      - PLEX_GID=1001
+      - VIRTUAL_HOST=plex.domain.com
+      - VIRTUAL_PORT=32400
+      - VIRTUAL_NETWORK=nginx-proxy
+      - LETSENCRYPT_HOST=plex.domain.com
+      - LETSENCRYPT_EMAIL=youremail@domain.com
+    volumes:
+      - ./appdata/plex:/config
+      - ./appdata/plex/transcode:/transcode
+      - /home/plex/mnt/media:/media
+      - /dev/shm:/dev/shm
+    networks:
+      - nginx-proxy
+
+networks:
+  nginx-proxy:
+    external:
+      name: proxy-tier
