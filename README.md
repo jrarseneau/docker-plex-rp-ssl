@@ -10,11 +10,11 @@ In these examples, we will use the `proxy-tier` network.
 ## 2. Cloud Flare Configuration
 
 ### Crypto Tab
-SSL: **Full (Strict)**
-HTTP Strict Transport Security: **Disabled** (you can enable, but beware, not really necessary).
-Opportunistic Encryption: **On**
-TLS 1.3: **Enabled+0RTT**
-Automatic HTTP Rewrites: **Off**
+SSL: **Full (Strict)**  
+HTTP Strict Transport Security: **Disabled** (you can enable, but beware, not really necessary).  
+Opportunistic Encryption: **On**  
+TLS 1.3: **Enabled+0RTT**  
+Automatic HTTP Rewrites: **Off**  
 
 ### Firewall Tab
 Rate Limiting: **Off**
